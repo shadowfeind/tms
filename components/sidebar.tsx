@@ -18,13 +18,13 @@ export const Sidebar = () => {
       name: "Dashboard",
       icon: <LayoutDashboard className="w-4 h-4 mr-2" />,
       link: "/dashboard",
-      isActive: pathname === "/dashboard/boards",
+      isActive: pathname === "/dashboard",
     },
     {
-      name: "Tasks",
+      name: "Boards",
       icon: <FileCheck className="w-4 h-4 mr-2" />,
-      link: "/dashboard/tasks",
-      isActive: pathname === "/dashboard/tasks",
+      link: "/dashboard/boards",
+      isActive: pathname === "/dashboard/boards",
     },
     {
       name: "Users",

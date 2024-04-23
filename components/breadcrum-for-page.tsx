@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { Fragment } from "react";
 
 interface BreadCrumbsProps {
   name: string;
@@ -30,23 +31,25 @@ export const BreadcrumnForPage = ({ breadCrumbs }: BreadCrumbPageProps) => {
         {breadCrumbs.map((crumbs) => {
           if (crumbs.link) {
             return (
-              <>
+              <Fragment key={crumbs.link}>
                 <BreadcrumbSeparator />
-                <BreadcrumbItem key={crumbs.link}>
+                <BreadcrumbItem>
                   <BreadcrumbLink asChild>
-                    <Link href="/components">{crumbs.name}</Link>
+                    <Link key={crumbs.link} href="/components">
+                      {crumbs.name}
+                    </Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
-              </>
+              </Fragment>
             );
           }
           return (
-            <>
+            <Fragment key={crumbs.link}>
               <BreadcrumbSeparator />
-              <BreadcrumbItem key={crumbs.name}>
+              <BreadcrumbItem>
                 <BreadcrumbPage>{crumbs.name}</BreadcrumbPage>
               </BreadcrumbItem>
-            </>
+            </Fragment>
           );
         })}
       </BreadcrumbList>

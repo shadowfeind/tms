@@ -1,6 +1,9 @@
 import { BreadcrumnForPage } from "@/components/breadcrum-for-page";
 import { MainContainer } from "@/components/main-container";
 import { DataTableDemo } from "./table";
+import { DataTable } from "./data-table";
+import { userData } from "./data";
+import { columns } from "./colums";
 
 const breadCrumbs = [
   {
@@ -13,6 +16,7 @@ export const UsersPage = () => {
     <MainContainer>
       <BreadcrumnForPage breadCrumbs={breadCrumbs} />
       <DataTableDemo />
+      <DataTable columns={columns} data={userData} />
     </MainContainer>
   );
 };

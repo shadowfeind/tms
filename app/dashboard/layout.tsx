@@ -13,7 +13,7 @@ export const Dashboardlayout = ({
         <div className="w-64 h-screen bg-neutral-950  hidden md:block flex-shrink-0 px-4 pt-16">
           <Sidebar />
         </div>
-        <div className="mt-16">{children}</div>
+        <div className="pt-16 w-full bg-neutral-100">{children}</div>
       </div>
     </div>
   );

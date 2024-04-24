@@ -46,7 +46,7 @@ export const Sidebar = () => {
     },
   ];
   return (
-    <>
+    <div className="fixed w-64 h-screen bg-neutral-950 px-4 pt-16 z-0">
       {routes.map((route: SidebarItemsProps) => (
         <SidebarList
           key={route.link}
@@ -56,6 +56,6 @@ export const Sidebar = () => {
           isActive={route.isActive}
         />
       ))}
-    </>
+    </div>
   );
 };

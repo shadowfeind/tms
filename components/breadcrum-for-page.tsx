@@ -28,30 +28,22 @@ export const BreadcrumnForPage = ({ breadCrumbs }: BreadCrumbPageProps) => {
             <Link href="/dashboard">Dashboard</Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
-        {breadCrumbs.map((crumbs) => {
-          if (crumbs.link) {
-            return (
-              <Fragment key={crumbs.link}>
-                <BreadcrumbSeparator />
-                <BreadcrumbItem>
-                  <BreadcrumbLink asChild>
-                    <Link key={crumbs.link} href="/components">
-                      {crumbs.name}
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-              </Fragment>
-            );
-          }
-          return (
-            <Fragment key={crumbs.link}>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
+        {breadCrumbs.map((crumbs, index) => (
+          <Fragment
+            key={`<span class="math-inline">\{crumbs\.name\}\-</span>{index}`}
+          >
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              {crumbs.link ? (
+                <BreadcrumbLink asChild>
+                  <Link href={crumbs.link}>{crumbs.name}</Link>
+                </BreadcrumbLink>
+              ) : (
                 <BreadcrumbPage>{crumbs.name}</BreadcrumbPage>
-              </BreadcrumbItem>
-            </Fragment>
-          );
-        })}
+              )}
+            </BreadcrumbItem>
+          </Fragment>
+        ))}
       </BreadcrumbList>
     </Breadcrumb>
   );

@@ -36,6 +36,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { User } from "@/types";
+import { AddUserModel } from "./add-user";
 
 export const columns: ColumnDef<User>[] = [
   {
@@ -163,6 +164,9 @@ export function DataTable({ data }: { data: User[] }) {
     React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
 
+  //for modal
+  const [isOpen, setIsOpen] = React.useState(false);
+
   const table = useReactTable({
     data,
     columns,
@@ -184,7 +188,7 @@ export function DataTable({ data }: { data: User[] }) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex justify-between flex-wrap items-center py-4">
         <Input
           placeholder="Filter emails..."
           value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
@@ -193,32 +197,37 @@ export function DataTable({ data }: { data: User[] }) {
           }
           className="max-w-sm"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown className="ml-2 h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="sm: mt-2">
+          <Button className="mr-2" onClick={() => setIsOpen(true)}>
+            Add User
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="ml-auto">
+                Columns <ChevronDown className="ml-2 h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {table
+                .getAllColumns()
+                .filter((column) => column.getCanHide())
+                .map((column) => {
+                  return (
+                    <DropdownMenuCheckboxItem
+                      key={column.id}
+                      className="capitalize"
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    >
+                      {column.id}
+                    </DropdownMenuCheckboxItem>
+                  );
+                })}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
       <div className="rounded-md border">
         <Table>
@@ -294,6 +303,7 @@ export function DataTable({ data }: { data: User[] }) {
           </Button>
         </div>
       </div>
+      <AddUserModel isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 }

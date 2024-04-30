@@ -1,7 +1,7 @@
 import { BreadcrumnForPage } from "@/components/breadcrum-for-page";
 import { MainContainer } from "@/components/main-container";
-import { DataTable } from "./table";
-import { userData } from "./data";
+import { DataTable } from "./_components/table";
+import { userData } from "./_components/data";
 
 const breadCrumbs = [
   {

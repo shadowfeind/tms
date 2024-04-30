@@ -15,6 +15,9 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useEffect, useState, useTransition } from "react";
+import { createUser } from "@/action/userActions";
+import { FormError } from "@/components/form-error-message";
 
 interface AddUserModelProps {
   isOpen: boolean;
@@ -22,12 +25,25 @@ interface AddUserModelProps {
 }
 
 export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
+  const [error, setError] = useState<string | undefined>("");
+
+  const [isPending, startTransition] = useTransition();
   const form = useForm<z.infer<typeof createUserSchema>>({
     resolver: zodResolver(createUserSchema),
   });
 
   const handleSubmit = (values: z.infer<typeof createUserSchema>) => {
-    console.log(values);
+    setError("");
+    startTransition(() => {
+      createUser(values).then((data) => {
+        if (data?.error) {
+          setError(data.error);
+        } else {
+          form.reset();
+          setIsOpen(false);
+        }
+      });
+    });
   };
 
   return (
@@ -111,8 +127,9 @@ export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
                 )}
               />
             </div>
-            <Button className="mt-4" type="submit">
-              Create User
+            <FormError message={error} />
+            <Button disabled={isPending} className="mt-4" type="submit">
+              {isPending ? "Creating User...." : "Create User"}
             </Button>
           </form>
         </Form>

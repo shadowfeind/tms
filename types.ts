@@ -1,7 +1,9 @@
+import { Role } from "@prisma/client";
+
 export interface User {
-    id: string
-    name: string
-    email: string 
-    userName: string 
-    role: "Admin" | "User"
+  id: string;
+  fullName: string;
+  email: string;
+  userName: string;
+  role: Role;
 }

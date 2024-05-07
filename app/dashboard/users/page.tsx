@@ -1,7 +1,7 @@
 import { BreadcrumnForPage } from "@/components/breadcrum-for-page";
 import { MainContainer } from "@/components/main-container";
 import { DataTable } from "./_components/table";
-import { userData } from "./_components/data";
+import { db } from "@/lib/db";
 
 const breadCrumbs = [
   {
@@ -9,11 +9,21 @@ const breadCrumbs = [
   },
 ];
 
-export const UsersPage = () => {
+export const UsersPage = async () => {
+  const users = await db.user.findMany({
+    select: {
+      id: true,
+      fullName: true,
+      userName: true,
+      email: true,
+      role: true,
+    },
+  });
+
   return (
     <MainContainer>
       <BreadcrumnForPage breadCrumbs={breadCrumbs} />
-      <DataTable data={userData} />
+      <DataTable data={users} />
     </MainContainer>
   );
 };

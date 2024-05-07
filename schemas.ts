@@ -10,4 +10,5 @@ export const createUserSchema = z.object({
     message: "Invalid phone number format. Must be 10 digits.",
   }),
   password: string().min(3),
+  role: string(),
 });

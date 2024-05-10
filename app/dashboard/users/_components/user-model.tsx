@@ -15,8 +15,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useState, useTransition } from "react";
-import { createUser } from "@/action/userActions";
+import { useEffect, useState, useTransition } from "react";
+import { createUser, getUserById } from "@/action/userActions";
 import { FormError } from "@/components/form-error-message";
 import {
   Select,
@@ -29,9 +29,16 @@ import {
 interface AddUserModelProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  mode: string;
+  userId?: string;
 }
 
-export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
+export const AddUserModel = ({
+  isOpen,
+  setIsOpen,
+  mode,
+  userId,
+}: AddUserModelProps) => {
   const [error, setError] = useState<string | undefined>("");
 
   const [isPending, startTransition] = useTransition();
@@ -53,6 +60,14 @@ export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
     });
   };
 
+  useEffect(() => {
+    if (userId && (mode === "view" || mode === "edit")) {
+      getUserById(userId).then((data) => {
+        form.reset(data);
+      });
+    }
+  }, [mode, userId]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="p-8">
@@ -67,7 +82,11 @@ export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
                   <FormItem>
                     <FormLabel>FullName</FormLabel>
                     <FormControl>
-                      <Input placeholder="Full Name" {...field} />
+                      <Input
+                        placeholder="Full Name"
+                        {...field}
+                        disabled={mode === "view"}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -82,7 +101,11 @@ export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="email@gmail.com" {...field} />
+                      <Input
+                        placeholder="email@gmail.com"
+                        {...field}
+                        disabled={mode === "view"}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -97,7 +120,11 @@ export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
                   <FormItem>
                     <FormLabel>UserName</FormLabel>
                     <FormControl>
-                      <Input placeholder="username" {...field} />
+                      <Input
+                        placeholder="username"
+                        {...field}
+                        disabled={mode === "view"}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -112,7 +139,11 @@ export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
                   <FormItem>
                     <FormLabel>Phone</FormLabel>
                     <FormControl>
-                      <Input placeholder="9808123456" {...field} />
+                      <Input
+                        placeholder="9808123456"
+                        {...field}
+                        disabled={mode === "view"}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -127,7 +158,12 @@ export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="*****" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="*****"
+                        {...field}
+                        disabled={mode === "view"}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -144,6 +180,7 @@ export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      disabled={mode === "view"}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -161,9 +198,11 @@ export const AddUserModel = ({ isOpen, setIsOpen }: AddUserModelProps) => {
               />
             </div>
             <FormError message={error} />
-            <Button disabled={isPending} className="mt-4" type="submit">
-              {isPending ? "Creating User...." : "Create User"}
-            </Button>
+            {mode !== "view" && (
+              <Button disabled={isPending} className="mt-4" type="submit">
+                {isPending ? "Creating User...." : "Create User"}
+              </Button>
+            )}
           </form>
         </Form>
       </DialogContent>

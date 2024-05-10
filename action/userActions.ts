@@ -41,3 +41,12 @@ export const createUser = async (user: z.infer<typeof createUserSchema>) => {
 
   revalidatePath("/dashboard/users");
 };
+
+export const getUserById = async (id: string) => {
+  const user = await db.user.findUnique({
+    where: { id },
+    select: {},
+  });
+
+  return user;
+};

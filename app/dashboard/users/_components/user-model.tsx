@@ -212,7 +212,7 @@ export const AddUserModel = ({
                     <FormLabel>Role</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      value={field.value}
                       disabled={mode === "view"}
                     >
                       <FormControl>

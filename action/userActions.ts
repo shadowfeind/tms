@@ -83,3 +83,13 @@ export const updateUser = async (
 
   revalidatePath("/dashboard/users");
 };
+
+export const deleteUser = async (id: string) => {
+  if (!id) return { error: "Invalid user id" };
+
+  await db.user.delete({
+    where: { id },
+  });
+
+  revalidatePath("/dashboard/users");
+};

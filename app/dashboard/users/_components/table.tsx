@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/table";
 import { User } from "@/types";
 import { AddUserModel } from "./user-model";
+import { DeleteUserModal } from "./delete-user-modal";
 
 export function DataTable({ data }: { data: User[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -51,11 +52,17 @@ export function DataTable({ data }: { data: User[] }) {
 
   //for modal
   const [isOpen, setIsOpen] = React.useState(false);
+  const [deleteIsOpen, setDeleteIsOpen] = React.useState(false);
 
   const handleViewAndEdit = (id: string, mode: "view" | "edit" | "create") => {
     setUserId(id);
     setMode(mode);
     setIsOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    setUserId(id);
+    setDeleteIsOpen(true);
   };
 
   const columns: ColumnDef<User>[] = [
@@ -176,7 +183,7 @@ export function DataTable({ data }: { data: User[] }) {
               >
                 Edit
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => console.log(row.original.id)}>
+              <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -302,6 +309,11 @@ export function DataTable({ data }: { data: User[] }) {
         isOpen={isOpen}
         setIsOpen={setIsOpen}
         mode={mode}
+        userId={userId}
+      />
+      <DeleteUserModal
+        isOpen={deleteIsOpen}
+        setIsOpen={setDeleteIsOpen}
         userId={userId}
       />
     </div>

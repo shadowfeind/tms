@@ -1,7 +1,7 @@
 "use server";
 
 import { getUserByEmail, getUserByUserName } from "@/queries/user";
-import { createUserSchema } from "@/schemas";
+import { createUserSchema, updateUserSchema } from "@/schemas";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
@@ -36,6 +36,48 @@ export const createUser = async (user: z.infer<typeof createUserSchema>) => {
       phone,
       role: roleValue,
       password: hashedPassword,
+    },
+  });
+
+  revalidatePath("/dashboard/users");
+};
+
+export const getUserById = async (id: string) => {
+  const user = await db.user.findUnique({
+    where: { id },
+    select: {
+      fullName: true,
+      email: true,
+      userName: true,
+      phone: true,
+      role: true,
+    },
+  });
+
+  return user;
+};
+
+export const updateUser = async (
+  user: z.infer<typeof updateUserSchema>,
+  id: string
+) => {
+  if (!id) return { error: "Invalid User id" };
+  const validateFields = updateUserSchema.safeParse(user);
+
+  if (!validateFields.success) {
+    return { error: "Invalid fields" };
+  }
+
+  const { fullName, phone, role } = validateFields.data;
+
+  const roleValue: Role = role as Role;
+
+  await db.user.update({
+    where: { id },
+    data: {
+      fullName,
+      role: roleValue,
+      phone,
     },
   });
 

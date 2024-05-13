@@ -40,7 +40,7 @@ import { AddUserModel } from "./user-model";
 
 export function DataTable({ data }: { data: User[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [mode, setMode] = React.useState("create");
+  const [mode, setMode] = React.useState<"create" | "edit" | "view">("create");
   const [userId, setUserId] = React.useState("");
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -52,9 +52,9 @@ export function DataTable({ data }: { data: User[] }) {
   //for modal
   const [isOpen, setIsOpen] = React.useState(false);
 
-  const handleView = (id: string) => {
+  const handleViewAndEdit = (id: string, mode: "view" | "edit" | "create") => {
     setUserId(id);
-    setMode("view");
+    setMode(mode);
     setIsOpen(true);
   };
 
@@ -166,10 +166,14 @@ export function DataTable({ data }: { data: User[] }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => handleView(row.original.id)}>
+              <DropdownMenuItem
+                onClick={() => handleViewAndEdit(row.original.id, "view")}
+              >
                 View
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => console.log(row.original.id)}>
+              <DropdownMenuItem
+                onClick={() => handleViewAndEdit(row.original.id, "edit")}
+              >
                 Edit
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => console.log(row.original.id)}>

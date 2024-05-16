@@ -1,7 +1,10 @@
-import { Fullscreen } from "lucide-react";
 import { string, z } from "zod";
-
 const phoneRegExp = /^\d{10}$/;
+
+export const loginSchema = z.object({
+  userName: string().min(3).max(50),
+  password: string().min(3),
+});
 
 export const createUserSchema = z.object({
   fullName: string().max(50),

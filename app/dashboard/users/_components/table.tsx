@@ -38,6 +38,7 @@ import {
 import { User } from "@/types";
 import { AddUserModel } from "./user-model";
 import { DeleteUserModal } from "./delete-user-modal";
+import { useSession } from "next-auth/react";
 
 export function DataTable({ data }: { data: User[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -53,6 +54,9 @@ export function DataTable({ data }: { data: User[] }) {
   //for modal
   const [isOpen, setIsOpen] = React.useState(false);
   const [deleteIsOpen, setDeleteIsOpen] = React.useState(false);
+
+  const session = useSession();
+  console.log(session);
 
   const handleViewAndEdit = (id: string, mode: "view" | "edit" | "create") => {
     setUserId(id);
@@ -178,14 +182,20 @@ export function DataTable({ data }: { data: User[] }) {
               >
                 View
               </DropdownMenuItem>
-              <DropdownMenuItem
-                onClick={() => handleViewAndEdit(row.original.id, "edit")}
-              >
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>
-                Delete
-              </DropdownMenuItem>
+              {session?.data?.user?.role === "Admin" && (
+                <>
+                  <DropdownMenuItem
+                    onClick={() => handleViewAndEdit(row.original.id, "edit")}
+                  >
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleDelete(row.original.id)}
+                  >
+                    Delete
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         );
@@ -224,9 +234,11 @@ export function DataTable({ data }: { data: User[] }) {
           className="max-w-sm"
         />
         <div className="sm: mt-2">
-          <Button className="mr-2" onClick={() => setIsOpen(true)}>
-            Add User
-          </Button>
+          {session?.data?.user?.role === "Admin" && (
+            <Button className="mr-2" onClick={() => setIsOpen(true)}>
+              Add User
+            </Button>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">

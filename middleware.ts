@@ -9,7 +9,6 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const isPublicRoutes = publicRoutes.includes(nextUrl.pathname);
 
-  // Redirect logged-in users from "/" to "/dashboard"
   if (isLoggedIn && nextUrl.pathname === "/") {
     return Response.redirect(new URL("/dashboard", req.url));
   }
@@ -17,6 +16,8 @@ export default auth((req) => {
   if (!isLoggedIn && !isPublicRoutes) {
     return Response.redirect(new URL("/", nextUrl));
   }
-
-  return;
 });
+
+export const config = {
+  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+};

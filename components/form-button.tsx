@@ -12,7 +12,7 @@ export const FormButton = ({ content, loadingContent }: FormButtonProps) => {
   const { pending } = useFormStatus();
 
   return (
-    <Button type="submit" disabled={pending}>
+    <Button className="mt-4" type="submit" disabled={pending}>
       {pending ? loadingContent : content}
     </Button>
   );

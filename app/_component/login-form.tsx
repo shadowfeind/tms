@@ -18,7 +18,7 @@ export const LoginForm = () => {
   const [formState, action] = useFormState(login, {
     errors: {},
   });
-  console.log(formState);
+
   return (
     <div className="bg-neutral-900 w-full h-screen flex justify-center items-center">
       <Card className="w-[350px] shadow-md">

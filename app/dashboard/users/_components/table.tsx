@@ -56,7 +56,6 @@ export function DataTable({ data }: { data: User[] }) {
   const [deleteIsOpen, setDeleteIsOpen] = React.useState(false);
 
   const session = useSession();
-  console.log(session);
 
   const handleViewAndEdit = (id: string, mode: "view" | "edit" | "create") => {
     setUserId(id);

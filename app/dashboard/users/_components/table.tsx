@@ -39,6 +39,7 @@ import { User } from "@/types";
 import { AddUserModel } from "./user-model";
 import { DeleteUserModal } from "./delete-user-modal";
 import { useSession } from "next-auth/react";
+import { ChangePasswordModal } from "./change-password-modal";
 
 export function DataTable({ data }: { data: User[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -54,6 +55,7 @@ export function DataTable({ data }: { data: User[] }) {
   //for modal
   const [isOpen, setIsOpen] = React.useState(false);
   const [deleteIsOpen, setDeleteIsOpen] = React.useState(false);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = React.useState(false);
 
   const session = useSession();
 
@@ -66,6 +68,11 @@ export function DataTable({ data }: { data: User[] }) {
   const handleDelete = (id: string) => {
     setUserId(id);
     setDeleteIsOpen(true);
+  };
+
+  const handleChangePassword = (id: string) => {
+    setUserId(id);
+    setIsChangePasswordOpen(true);
   };
 
   const columns: ColumnDef<User>[] = [
@@ -164,8 +171,6 @@ export function DataTable({ data }: { data: User[] }) {
     {
       id: "actions",
       cell: ({ row }) => {
-        const payment = row.original;
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -176,6 +181,7 @@ export function DataTable({ data }: { data: User[] }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => handleViewAndEdit(row.original.id, "view")}
               >
@@ -187,6 +193,11 @@ export function DataTable({ data }: { data: User[] }) {
                     onClick={() => handleViewAndEdit(row.original.id, "edit")}
                   >
                     Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleChangePassword(row.original.id)}
+                  >
+                    Change Password
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => handleDelete(row.original.id)}
@@ -325,6 +336,11 @@ export function DataTable({ data }: { data: User[] }) {
       <DeleteUserModal
         isOpen={deleteIsOpen}
         setIsOpen={setDeleteIsOpen}
+        userId={userId}
+      />
+      <ChangePasswordModal
+        isOpen={isChangePasswordOpen}
+        setIsOpen={setIsChangePasswordOpen}
         userId={userId}
       />
     </div>

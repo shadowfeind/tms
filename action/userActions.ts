@@ -1,12 +1,18 @@
 "use server";
 
 import { getUserByEmail, getUserByUserName } from "@/queries/user";
-import { createUserSchema, updateUserSchema } from "@/schemas";
+import {
+  changePasswordSchema,
+  createUserSchema,
+  updateUserSchema,
+} from "@/schemas";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { db } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { Role } from "@prisma/client";
+import { auth } from "@/auth";
+import { getUserById as getUserByIdQuery } from "../queries/user";
 
 export const createUser = async (user: z.infer<typeof createUserSchema>) => {
   const validateFields = createUserSchema.safeParse(user);
@@ -92,4 +98,72 @@ export const deleteUser = async (id: string) => {
   });
 
   revalidatePath("/dashboard/users");
+};
+
+interface ChangePasswordProps {
+  errors: {
+    password?: string[];
+    confirmpassword?: string[];
+    _form?: string[];
+  };
+  success?: boolean;
+}
+
+export const changePassword = async (
+  userId: string,
+  prevState: ChangePasswordProps,
+  formData: FormData
+): Promise<ChangePasswordProps> => {
+  const result = changePasswordSchema.safeParse({
+    password: formData.get("password"),
+    confirmpassword: formData.get("confirmpassword"),
+  });
+
+  if (!result.success) {
+    return {
+      errors: result.error.flatten().fieldErrors,
+    };
+  }
+
+  const session = await auth();
+
+  if (!session || !session.user) {
+    return {
+      errors: {
+        _form: ["You must sign in to do this."],
+      },
+    };
+  }
+
+  if (session.user.role !== "Admin") {
+    return {
+      errors: {
+        _form: ["Only admin can change password"],
+      },
+    };
+  }
+
+  const user = await getUserByIdQuery(userId);
+
+  if (!user) {
+    return {
+      errors: {
+        _form: ["User does not exists"],
+      },
+    };
+  }
+
+  const hashedPassword = await bcrypt.hash(result.data.password, 10);
+
+  await db.user.update({
+    where: { id: userId },
+    data: {
+      password: hashedPassword,
+    },
+  });
+
+  return {
+    errors: {},
+    success: true,
+  };
 };

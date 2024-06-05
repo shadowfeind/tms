@@ -35,3 +35,18 @@ export const updateUserSchema = z.object({
   }),
   role: string(),
 });
+
+export const changePasswordSchema = z
+  .object({
+    password: z.string().min(3),
+    confirmpassword: z.string().min(3),
+  })
+  .superRefine((data, context) => {
+    if (data.password !== data.confirmpassword) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Passwords don't match",
+        path: ["confirmpassword", "password"],
+      });
+    }
+  });

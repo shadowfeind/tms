@@ -19,7 +19,7 @@ export const HeaderUser = () => {
       {session?.data?.user && (
         <PopoverContent className="w-40 cursor-pointer">
           <p
-            className="text-sm text-muted-foreground"
+            className="text-sm p-2 text-muted-foreground hover:bg-black hover:text-white"
             onClick={() => signOut()}
           >
             Log Out

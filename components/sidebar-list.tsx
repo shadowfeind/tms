@@ -20,7 +20,7 @@ export const SidebarList = ({
   return (
     <div
       className={cn(
-        "flex text-white items-center hover:no-underline rounded-md p-4 hover:bg-neutral-800",
+        "flex text-white items-center hover:no-underline rounded-md p-3 my-1 hover:bg-neutral-800",
         isActive && "bg-neutral-800"
       )}
       onClick={() => router.push(link)}

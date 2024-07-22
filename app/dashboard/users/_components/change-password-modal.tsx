@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
 interface ChangePasswordModalProps {
@@ -25,9 +26,13 @@ export const ChangePasswordModal = ({
   const [formState, action] = useFormState(changePassword.bind(null, userId), {
     errors: {},
   });
-  if (formState.success) {
-    setIsOpen(false);
-  }
+
+  useEffect(() => {
+    if (formState.success) {
+      setIsOpen(false);
+    }
+  }, [formState.success, setIsOpen]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
@@ -52,10 +57,15 @@ export const ChangePasswordModal = ({
               <Label htmlFor="confirmpassword">confirmPassword</Label>
               <Input
                 name="confirmpassword"
-                type="confirmpassword"
+                type="password"
                 id="confirmpassword"
                 placeholder="confirmPassword"
               />
+              {formState.errors.confirmpassword ? (
+                <FormError
+                  message={formState.errors.confirmpassword?.join(", ")}
+                />
+              ) : null}
             </div>
             {formState.errors._form ? (
               <FormError message={formState.errors._form?.join(", ")} />
